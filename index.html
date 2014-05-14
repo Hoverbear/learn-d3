@@ -1,0 +1,331 @@
+<html>
+
+<head>
+    <!-- Include Bootstrap -->
+    <link rel=stylesheet href="lib/bootstrap.css">
+    <link rel=stylesheet href="lib/bootstrap-theme.css">
+    <link rel=stylesheet href="lib/glyphicons-halflings-regular.woff">
+    <!-- HighlightJS -->
+    <link rel="stylesheet" href="lib/github.css">
+
+
+</head>
+
+<body class="container">
+    <header class="text-center row">
+        <h1>JS and D3 By Example</h1>
+        <p>By Andrew</p>
+    </header>
+    <main class="row">
+        <article>
+            <h1>The Basics</h1>
+            <p>Links to check out D3</p>
+            <ul>
+                <li><a href="http://www.nytimes.com/interactive/2013/05/25/sunday-review/corporate-taxes.html?_r=0">Corporate Taxes</a>
+                </li>
+                <li><a href="http://bl.ocks.org/kerryrodden/7090426">Sunburst</a>
+                </li>
+                <li><a href="http://bl.ocks.org/mbostock/4060606">Map</a>
+                </li>
+                <li><a href="http://www.theguardian.com/world/interactive/2013/feb/12/state-of-the-union-reading-level">State of our union</a>
+                </li>
+            </ul>
+            <p>Lets go over Javascript a bit first...</p>
+            <section id="how-do">
+                <h2>How do?</h2>
+                <p>If you're using a real web browser, like Chrome or Firefox, you can right click anywhere on this page and hit <code>Inspect Element</code>, the navigate to the <code>Console</code> tab of the development console.</p>
+                <b>There you have it! A full javascript environment!</b>
+                <p>Wasn't that easy? Now you can follow along with any of the code below. The console will automagically print you return values in most cases.</p>
+            </section>
+            <section id="numbers">
+                <h2>Numbers</h2>
+                <p>Javascript's <code>Number</code> type very flexible... perhaps a bit too flexible...</p>
+                <pre><code class="hljs javascript">
+                var foo = 1,       // An int is a number
+                    fad = -1,      // Yup, Negatives too.
+                    bar = 1.0,     // A float is a number.
+                    baz = 0x10,    // A Hex is a number. (This is 16!)
+                    boo = parseInt('0010', 2), // A binary number also works. Don't you dare try to use `var foo = 01001`.
+                    flo = parseInt('asdf', 28); // Esoteric ones work too.
+                1 / 2; // => .5
+                1.0 * 2; // => 2
+                Math.floor(1 / 2); // => 0
+                Math.ceil(1 / 2); // => 1
+            </code></pre>
+            </section>
+            <section id="strings">
+                <h2>Strings</h2>
+                <p>Strings are fairly straightforward in Javascript. Not much special here. Note that Chars and Strings are the same. We won't go into too much detail because D3 doesn't use strings a bunch.</p>
+                <pre><code class="hljs javascript">
+                var foo = "Dr. Oscardoc", // A string is straightforward.
+                    bar = 'D';            // This is still a string.
+                String(55);     // => "55"
+                Number("55");   // => 55
+                Number("Blah"); // => NaN (Not a Number)
+                "A" + "B";      // => "AB"
+                "A" * 3;        // => "AAA"
+                "A" + foo;      // => "ADr. Oscardoc" 
+            </code></pre>
+            </section>
+            <section id="arrays">
+                <h2>Arrays</h2>
+                <p>Arrays are the holy nirvana between real <code>Arrays</code>, <code>Lists</code>, <code>Queues</code>, and <code>Stacks</code>. However be aware there is more then meets the eye. (Not covered.)</p>
+                <pre><code class="hljs javascript">
+                var myArray = [1, 2, 3],                    // Arrays are like honey badgers.
+                    another = ["String", 55, ["Thing", 2];  // They don't care what you give them.
+                myArray[0]; // => 1
+                // Like a stack
+                var thing = [1, 2, 3];
+                thing.pop();         // => 3
+                thing;               // => [1, 2]
+                thing.push("Bears"); // => 3 (The new length of the array.)
+                thing;               // => [1, 2, "Bears"]
+                
+                // Like a queue
+                var thing = [1, 2, 3];
+                thing.shift();       // => 1
+                thing;               // => [2, 3]
+                thing.unshift(55);   // => 3 (The new length of the array.)
+                
+                // Other useful tools.
+                [1, 2, 3].length;    // => 3
+                [1, 2, 3].reverse(); // => [3, 2, 1]
+                [55, 33, 12, 16].sort(); // => [12, 16, 33, 55]
+                ["Cow", "Dog", "Apple"].sort(); // ["Apple", "Cow", "Dog"]
+                
+                // Splice is complicated! https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+                var thing = [1, 2, 3];
+                thing.splice(1, 0, "Hello"); // => [] (Nothing was removed)
+                thing;                       // => [1, "Hello", 2, 3]
+                thing.splice(1, 1);          // => ["Hello"] (This was removed.)
+                thing;                       // => [1, 2, 3]
+                
+                // Slice is different still!
+                var thing = [1, 2, 3];
+                thing.slice(0, 2);           // => [1, 2]
+                
+                // Stick them together too.
+                [1, 2, 3].concat([4, 5, 6]); // => [1, 2, 3, 4, 5, 6]
+            </code></pre>
+                <p>There is a crapload of stuff you can do with arrays. Check out <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">the MDN docs.</a> Good Javascript code should make ample use of things like <code>.every()</code>, <code>.some()</code>, <code>.map()</code>, <code>.filter()</code>, etc.</p>
+            </section>
+            <section id="objects">
+                <h2>Objects</h2>
+                <p>Objects are conceptually similar to python dictionaries. Basically, you give them a <code>(key, value)</code> pair and they store it for you. They don't store it in order necessarily, but they might.</p>
+                <pre><code class="hljs javascript">
+                var myObject = {}, // Empty
+                    another = {    // Populated with 2 keys.
+                        "key": "value",  // The keys **should** be a string.
+                        123: 456,        // You can make them numbers and stuff too, you crazy person.
+                        "bears": "hover" // The values can be anything.
+                    }
+                another.key;     // => "value"
+                another["key"];  // => "value" (Good for programmatic access!)
+                // Adding and removing keys.
+                myObject.something = 1;
+                myObject["Something Else"] = "Potato";
+                delete myObject.something;    // => true
+                myObject;                     // => {"Something Else": "Potato"}
+            </code></pre>
+                <p>Objects and arrays are interchangable for many things. This is because secretly arrays are just objects... Except they have an order, and a <code>.length</code> property. There is a bunch of stuff you can do with Objects, but that's about all you need to know for now. Check out MDN for more info.</p>
+            </section>
+            <section id="functions">
+                <h2>Functions</h2>
+                <p>Functions in Javascript are extremely powerful, first class citizens. This is dramatically different then Java and it's ilk. You can have functions in arrays, in objects, or as parameters to other functions. Javascript even supports "Anonymous functions", functions without a name. D3 makes extensive use of functions, as does basically everything Javascript. We're going to lookg at some basics, more advanced concepts can be taught another time.</p>
+                <pre><code class="hljs javascript">
+                // One way to declare functions.
+                function myFunction(value) {    // Functions declared this way will get "hoisted"
+                    return value;              // This means you can use them before you declare them.
+                }
+                myFunction(1); // => 1
+                myFunction();
+                // Use before declaration example, uses a closure (which we don't know about yet!)
+                (function () {
+                    var result = callThis(); // callThis has been "hoisted" by the JIT.
+                    function callThis() {    // This is implicitly available anywhere within this 'scope'
+                        return 1;
+                    }
+                    return result;
+                })();    // => 1
+            </code></pre>
+                <p>Whoa, whoa, hold on a minute. What the heck is hoisting? Basically, the JIT will make <code>callThis</code> available anywhere inside that scope (the closure), even before it's declared. You can use (and abuse) this for making your code look pretty.</p>
+                <pre><code class="hljs javascript">
+                // Another way to declare a function.
+                var myFunction = function (value) { // This function ~isn't~ hoisted.
+                    return value;
+                }
+                myFunction(1) // => 1
+                // It's not hoisted.
+                (function () {
+                    var result = callThis();
+                    var callThis = function () {
+                        return 1;
+                    }
+                    return result;
+                })();    // => TypeError
+            </code></pre>
+                <p>Functions provide are useful for a variety of things when combined with methods available to arrays and objects. Lets use the array <code>.map()</code> function to demonstrate anonymouse functions.</p>
+                <pre><code class="hljs javascript">
+                [1, 2, 3].map(function (value) { // An anonymous function.
+                    return value * 2;
+                });
+            </code></pre>
+                <p>You'll use anonymous functions a bunch in D3! By the way, Javascript functions can handle any number of args, even if they don't say they accept any. This is left as an excersize for the user. :)</p>
+            </section>
+            <section id="closures">
+                <h2>Closures</h2>
+                <p>Closures are a way to isolate scope. Javascript's scoping is by <b>Function</b> and the context of <code>this</code> (Which is like self, this, etc in other languages) can change depending on how a function is called. Closures provide us with a way to isolate things.
+                    <pre><code class="hljs javascript">
+                (function () {
+                    // Inside Closure
+                })();
+            </code></pre>
+            </section>
+            <section>
+                <h2>Classes/Prototypes</h2>
+                Javascript is a Prototype based language. Classes are not part of it's vocabulary
+            </section>
+        </article>
+        <article>
+            <h1>Digging into D3</h1>
+            <p>This page is pre-wired with <code>d3.js</code> so you don't need to worry about that. Lets get started! A note, D3 uses something called CSS3 selectors to determine which elements to select. This is beyond the scope of this tutorial, for more information consult MDN.</p>
+            <p>The code samples below are meant to be run on this page. They all have a panel which they work in.</p>
+            <section>
+                <h2>Data Binding</h2>
+                <pre><code class="hljs javascript">
+                    var myData = ["Foo", "Bar", "Baz"]; // Declare some data.
+                    // D3 bit.
+                    var canvas = d3.select("#d3-1").selectAll("p").data(myData);
+                    canvas.enter()
+                        .append("p")
+                        .text(function (datum) {
+                            return datum;
+                        });
+                </code></pre>
+                <div class="panel panel-default">
+                    <div id="d3-1" class="panel-body"></div>
+                </div>
+                <p>The code above should create three lines of text in the panel. Lets break it down:</p>
+                <ul>
+                    <li><code>d3.select("#d3-1")</code> - This selects the DOM element by the ID of "d3-1".</li>
+                    <li><code>.selectAll("p")</code> - Selects all <code>p</code> elements that are descendants of the <code>#d3-1</code> element. Note that there aren't any yet. This is because D3 works off the idea of "Data Binding". We'll see later why this is done.</li>
+                    <li><code>.data(myData)</code> - Sets <code>myData</code> to be the data bound to the element.</li>
+                    <li><code>canvas.enter()</code> - Here we're declaring what happens whenever data "enters" this D3 fragment. Note we declared the data was from <code>myData</code>. Since right now there are no <code>p</code> elements, all data is new data! So it will all fire off the <code>.enter()</code> code.</li>
+                    <li><code>.append("p")</code> - Whenever a data element <code>.enter()</code>s, append a <code>p</code> element. Note how this matches with the <code>selectAll("p")</code> from above? Yup, this is why we needed it!</li>
+                    <li><code>.text(...)</code> - Sets the text of the <code>p</code> element we just created to be whatever value is passed in... <b>Note:</b> If a function is passed in, it will execute that function and use it's return value instead.</li>
+                </ul>
+                <p>By now, you've probably got the clever idea to do something like <code>myData.push("Potato")</code>, and noticed that it doesn't change anything! Ugh! So frustrating! Turns out, you'll need to run the code after the "d3 bit" comment again! Try it!</p>
+                <b>What if we remove data?</b>
+                <p>If you want your visualization to handle the loss of data, you'll need to create an <code>exit</code> method.</p>
+                <pre><code class="hljs javascript">
+                    canvas.exit().remove(); // Removes any data that gets deleted.
+                </code></pre>
+                <b>What if we change our data?</b>
+                <p>Lets say we change <code>myData[1] = "Bear"</code> and run our code bit again. You'll see that "Bar" doesn't become "Bear", what the heck?! That's because we didn't define an <code>.transition()</code> function. Lets do that now. More info <a href="http://bost.ocks.org/mike/join/">here</a>.</p>
+                <div class="panel panel-default">
+                    <div id="d3-2" class="panel-body"></div>
+                </div>
+                <pre><code class="hljs javascript">
+                    var myData = ["Foo", "Bar", "Baz"]; // Declare some data.
+                    // Lets make it a function.
+                    function updateD3() {
+                        var canvas = d3.select("#d3-2").selectAll("p").data(myData);
+                        canvas.enter()
+                            .append("p")
+                            .text(function (datum) {
+                                return datum;
+                        });
+                        canvas.exit().remove();
+                        canvas.transition().text(function (datum) {
+                            return datum;
+                        });
+                    }
+                    updateD3();
+                    // Run this after!
+                    myData[1] = "Bear";
+                    updateD3();
+                </code></pre>
+            </section>
+            <section>
+                <h2>Making Pretty Pictures</h2>
+                <p>Turns out the HTML DOM isn't very good at making shiny pictures. So in D3 we usually use <code>svg</code> and it's elements. Lets make an SVG element with a circle in it.</p>
+                <div class="panel panel-default">
+                    <div id="d3-3" class="panel-body"></div>
+                </div>
+                <pre><code class="hljs javascript">
+                    var svgElem = d3.select("#d3-3").append("svg");
+                    svgElem.attr("width", 50)
+                        .attr("height", 50);     // How tiny!
+                    
+                    var circleElem = svgElem.append("circle")
+                        .attr("cx", 25)
+                        .attr("cy", 25)
+                        .attr("r", 25)
+                        .style("fill", "brown");
+                </code></pre>
+                <p>Now that's a pretty picture! Lets break this one down too (Skipping what we've seen):</p>
+                <ul>
+                    <li><code>var svgElem = d3.select(...</code> - D3 is pretty clever about what it returns, if you haven't noticed we can easily chain functions and assign variables!</li>
+                    <li><code>.attr("height", 50)</code> - Each element of the DOM (even SVG elements) have attributes which define them. These are things like height, width, radius, and other things. You can also use functions for the second arg, like before.</li>
+                    <li><code>.style("fill", "brown")</code> - This changes the styling of the element, note how this is different then <code>.attr()</code>.</li>
+                </ul>
+                <p>At this point, try right clicking on your brown circle and inspecting the element. Can you distinguish what we'd change with <code>.attr</code> and <code>.style</code>?</p>
+                <b>A more complicated example...</b>
+                <p>Lets make more circles! With Data binding this time! (We didn't last time, didn't you notice?)</p>
+                <div class="panel panel-default">
+                    <div id="d3-4" class="panel-body"></div>
+                </div>
+                <pre><code class="hljs javascript">
+                    var myData = [40, 30, 20, 10],
+                        color = d3.scale.category20(), // This is some D3 Magic for getting random colors.
+                        canvas = d3.select("#d3-4").append("svg").attr("width", 100).attr("height", 100);
+                    
+                    function updateD3() { // Hoisted!
+                        var circles = canvas.selectAll("circle").data(myData);
+                        circles.enter()
+                            .append("circle")
+                            .attr("cx", 50).attr("cy", 50)
+                            .attr("r", function (datum) {
+                                return datum; // The radius of the datum.
+                            })
+                            .style("fill", function (datum, index) {
+                                return color(index); // Calls the color function.
+                            });
+                        circles.exit().remove();
+                        circles.transition()
+                            .attr("r", function (datum) {
+                                return datum;
+                            });
+                    }
+                    
+                    updateD3();
+                    // Pause
+                    myData[0] = 0;
+                    updateD3();
+                    // Pause
+                    myData[0] = 10;
+                    updateD3();
+                </code></pre>
+            </section>
+            <section id="closing">
+                Congratulations! You now understand the basics of using D3! As you may have assumed, D3 is a heck of a lot more than this. However this teaches you the basics of working with data and javascript. Feel free to consult me or Google regarding more info into D3.
+            </section>
+        </article>
+    </main>
+    <footer class="row">
+
+    </footer>
+    <!-- JQuery -->
+    <script src="lib/jquery-2.1.1.js"></script>
+    <!-- Bootstrap -->
+    <script src="lib/bootstrap.js"></script>
+    <!-- D3.js -->
+    <script src="lib/d3.js"></script>
+    <!-- Hightlight JS -->
+    <script src="lib/highlight.pack.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+</body>
+
+</html>
